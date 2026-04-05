@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Google Meet Connector",
+  "version": "1.0",
+  "description": "Connects to the current Google Meet tab and communicates with it.",
+  "permissions": ["tabs", "activeTab", "scripting"],
+  "host_permissions": ["*://meet.google.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Connect to Meet"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
