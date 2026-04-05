@@ -1,5 +1,6 @@
 # Environment variables
 .env
+.venv
 
 # Python
 __pycache__/
@@ -11,7 +12,7 @@ venv/
 # Uploads
 uploads/
 
+
 # OS
 .DS_Store
-
 .qwen
