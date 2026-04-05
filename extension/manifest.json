@@ -18,8 +18,8 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["offscreen.html", "offscreen.js"],
-      "matches": ["<all_urls>"]
+      "resources": ["offscreen.html", "offscreen.js", "sidebar.css", "sidebar.js"],
+      "matches": ["*://meet.google.com/*"]
     }
   ],
   "background": {
@@ -32,7 +32,8 @@
   "content_scripts": [
     {
       "matches": ["https://meet.google.com/*"],
-      "js": ["contentScript.js"],
+      "js": ["sidebar.js", "contentScript.js"],
+      "css": ["sidebar.css"],
       "run_at": "document_idle"
     }
   ]

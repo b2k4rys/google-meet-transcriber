@@ -2,6 +2,7 @@ const micButton = document.getElementById("enable-mic");
 const startButton = document.getElementById("start-rec");
 const stopButton = document.getElementById("stop-rec");
 const copyAllButton = document.getElementById("copy-all");
+const openSidebarButton = document.getElementById("open-sidebar");
 const statusText = document.getElementById("status");
 const statusDot = document.querySelector(".status-dot");
 const emptyState = document.getElementById("empty-state");
@@ -494,6 +495,29 @@ stopButton.addEventListener("click", async () => {
   } catch (error) {
     setUi(false);
     setStatus(`Failed to stop recording: ${error instanceof Error ? error.message : String(error)}`, "error");
+  }
+});
+
+openSidebarButton.addEventListener("click", async () => {
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab?.id) {
+      throw new Error("No active tab.");
+    }
+
+    if (!tab.url.includes("meet.google.com")) {
+      await chrome.tabs.create({ url: "https://meet.google.com/" });
+      setStatus("Opened Google Meet. The sidebar will appear when you join a meeting.", "warning");
+    } else {
+      try {
+        await chrome.tabs.sendMessage(tab.id, { type: "open-sidebar" });
+        setStatus("Sidebar opened in Google Meet!", "success");
+      } catch (e) {
+        setStatus("Open Google Meet to use the sidebar feature.", "warning");
+      }
+    }
+  } catch (error) {
+    setStatus(`Failed to open sidebar: ${error instanceof Error ? error.message : String(error)}`, "error");
   }
 });
 

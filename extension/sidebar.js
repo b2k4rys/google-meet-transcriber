@@ -188,6 +188,16 @@ function updateStatus(text, tone = "idle") {
 
 // Listen for messages from background
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "open-sidebar") {
+    if (!sidebarOpen) {
+      sidebarOpen = true;
+      sidebarElement.classList.add("open");
+      toggleButton.classList.add("active");
+    }
+    sendResponse({ ok: true });
+    return true;
+  }
+
   if (message.type === "RECORDING_STATE") {
     updateUI(!!message.recording);
     if (message.recording) {
@@ -195,7 +205,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else {
       updateStatus("Recorder is idle.", "idle");
     }
-    return;
+    return true;
   }
 
   if (message.type === "RECORDING_RESULT") {
@@ -205,7 +215,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (message.status === "stopping") {
       updateStatus("Processing audio...", "warning");
     }
-    return;
+    return true;
   }
 });
 
