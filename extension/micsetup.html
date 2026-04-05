@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enable Microphone</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 0 16px;
+      color: #202124;
+    }
+
+    button {
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    #status {
+      margin-top: 16px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h2>Enable Microphone</h2>
+  <p>Grant microphone permission once so your voice can be mixed into Meet recordings.</p>
+  <button id="enable">Enable</button>
+  <div id="status">Waiting for microphone permission.</div>
+  <script src="micsetup.js"></script>
+</body>
+</html>
