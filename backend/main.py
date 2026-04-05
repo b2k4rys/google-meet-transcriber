@@ -41,6 +41,10 @@ Follow-up Questions:
 - The questions must be based on information actually mentioned or implied in the conversation.
 - The questions should help evaluate leadership potential, commitment, self-awareness, initiative, values, and fit.
 - Prefer specific, probing questions over generic ones.
+- Format each item exactly like this:
+  1. Question: ...
+     Why ask: ...
+     Listen for: ...
 
 Signals To Explore:
 - Write 2-4 concise bullet points describing themes, strengths, gaps, or ambiguities worth exploring in a next conversation.

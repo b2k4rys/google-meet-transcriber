@@ -3,24 +3,609 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meet Connector</title>
+  <title>inVision U Interview Lens</title>
   <style>
-    body { font-family: Arial, sans-serif; min-width: 240px; padding: 16px; }
-    button { width: 100%; padding: 10px; font-size: 14px; }
-    .actions { display: grid; gap: 8px; }
-    .status { margin-top: 12px; font-size: 13px; color: #333; }
-    .response { margin-top: 12px; font-size: 12px; color: #222; white-space: pre-wrap; }
+    :root {
+      --acid: #d3ff12;
+      --paper: #f7f4eb;
+      --ink: #111111;
+      --muted: #5e5b55;
+      --line: #171717;
+      --soft-line: rgba(17, 17, 17, 0.16);
+      --card: #ffffff;
+      --shadow: 0 18px 40px rgba(17, 17, 17, 0.08);
+      --radius: 26px;
+      --radius-sm: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 460px;
+      max-width: 460px;
+      background:
+        linear-gradient(180deg, rgba(211, 255, 18, 0.62) 0, rgba(211, 255, 18, 0.62) 112px, var(--paper) 112px),
+        var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
+    }
+
+    button {
+      font: inherit;
+      border: 1.5px solid var(--line);
+      cursor: pointer;
+      transition: transform 120ms ease, background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      cursor: default;
+      opacity: 0.44;
+      transform: none;
+    }
+
+    .shell {
+      padding: 18px 18px 22px;
+    }
+
+    .brand-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .brand-lockup {
+      display: grid;
+      gap: 2px;
+    }
+
+    .brand-mark {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+    }
+
+    .brand-meta {
+      color: rgba(17, 17, 17, 0.82);
+      font-size: 11px;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .brand-pill {
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.6);
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(17, 17, 17, 0.72);
+    }
+
+    .hero-title {
+      margin: 0;
+      max-width: 380px;
+      font-size: 44px;
+      line-height: 0.94;
+      letter-spacing: -0.07em;
+      font-weight: 800;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 360px;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .rule {
+      height: 1px;
+      background: var(--line);
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .panel + .panel,
+    .panel + .analysis-grid,
+    .analysis-grid + .panel,
+    .status-panel + .analysis-grid {
+      margin-top: 16px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .section-index {
+      flex: none;
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(17, 17, 17, 0.68);
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 28px;
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+    }
+
+    .status-panel,
+    .controls-panel,
+    .analysis-panel,
+    .snapshot-panel,
+    .signals-panel,
+    .debug-panel,
+    .details-panel {
+      padding: 16px;
+    }
+
+    .controls-panel::before,
+    .questions-panel::before,
+    .snapshot-panel::before,
+    .signals-panel::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 12px;
+      background: var(--acid);
+    }
+
+    .controls-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .control-button {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 999px;
+      padding: 12px 16px;
+      text-align: left;
+    }
+
+    .control-button span {
+      display: block;
+    }
+
+    .control-label {
+      font-size: 16px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .control-note {
+      margin-top: 5px;
+      font-size: 11px;
+      line-height: 1.35;
+      color: rgba(17, 17, 17, 0.66);
+    }
+
+    .control-button.mic {
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .control-button.start {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .control-button.stop {
+      background: var(--acid);
+      color: var(--ink);
+    }
+
+    .status-panel {
+      background:
+        linear-gradient(135deg, rgba(211, 255, 18, 0.55), rgba(211, 255, 18, 0.08) 58%),
+        var(--card);
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.78);
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--ink);
+    }
+
+    .status-text {
+      margin: 12px 0 0;
+      max-width: 340px;
+      font-size: 20px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .analysis-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .analysis-panel {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .empty-state {
+      display: grid;
+      gap: 10px;
+      padding: 18px 16px;
+      border: 1.5px dashed rgba(17, 17, 17, 0.34);
+      border-radius: calc(var(--radius) - 2px);
+      background: rgba(255, 255, 255, 0.56);
+    }
+
+    .empty-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .empty-copy {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.48;
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--acid);
+      box-shadow: 0 0 0 1.5px var(--line);
+    }
+
+    .questions-panel {
+      position: relative;
+      padding: 16px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(211, 255, 18, 0.76), rgba(211, 255, 18, 0.26) 48%, #ffffff 48%, #ffffff 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-kicker {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: rgba(255, 255, 255, 0.78);
+      margin-bottom: 12px;
+    }
+
+    .questions-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .question-card {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1.5px solid var(--line);
+      border-radius: calc(var(--radius) - 4px);
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .question-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .question-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .question-copy {
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: transparent;
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .question-text {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+    }
+
+    .question-meta {
+      display: grid;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--soft-line);
+    }
+
+    .meta-row {
+      display: grid;
+      gap: 3px;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(17, 17, 17, 0.58);
+    }
+
+    .meta-value {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.48;
+      color: var(--muted);
+    }
+
+    .analysis-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .ghost-button {
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: transparent;
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .details-panel,
+    .debug-panel {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    details {
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-size: 12px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    pre {
+      margin: 0;
+      padding: 0 16px 16px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "SFMono-Regular", "Menlo", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #2f2c28;
+    }
   </style>
 </head>
 <body>
-  <h3>Google Meet Connector</h3>
-  <div class="actions">
-    <button id="enable-mic">Enable Microphone</button>
-    <button id="start-rec">Start Audio Recording</button>
-    <button id="stop-rec" disabled>Stop and Upload Audio</button>
+  <div class="shell">
+    <header class="brand-bar">
+      <div class="brand-lockup">
+        <div class="brand-mark">inVision U</div>
+        <div class="brand-meta">interview lens powered by inDrive</div>
+      </div>
+      <div class="brand-pill">Recruiter Tool</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Leadership school admissions</div>
+      <h1 class="hero-title">Capture the call. Surface the real next questions.</h1>
+      <p class="hero-copy">Review candidate answers through an inVision U styled recruiter brief with sharp follow-up prompts you can ask immediately.</p>
+    </section>
+
+    <div class="rule"></div>
+
+    <section class="panel controls-panel">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-index">01</span>
+          <h2 class="section-title">Capture</h2>
+        </div>
+      </div>
+      <div class="controls-grid">
+        <button class="control-button mic" id="enable-mic">
+          <span class="control-label">Enable Microphone</span>
+          <span class="control-note">Prime mic access once so the candidate and interviewer are both represented.</span>
+        </button>
+        <button class="control-button start" id="start-rec">
+          <span class="control-label">Start Audio Recording</span>
+          <span class="control-note">Begin listening to the active Google Meet conversation.</span>
+        </button>
+        <button class="control-button stop" id="stop-rec" disabled>
+          <span class="control-label">Stop and Generate Brief</span>
+          <span class="control-note">Upload the call and receive candidate-focused recruiter prompts.</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel status-panel">
+      <div class="status-chip">
+        <span class="status-dot"></span>
+        <span>Live status</span>
+      </div>
+      <p class="status-text" id="status">Recorder is idle.</p>
+    </section>
+
+    <section class="analysis-panel">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-index">02</span>
+          <h2 class="section-title">Recruiter Brief</h2>
+        </div>
+      </div>
+
+      <div class="empty-state" id="empty-state">
+        <p class="empty-title">No interview brief yet.</p>
+        <p class="empty-copy">After a recording finishes, candidate takeaways, follow-up questions, and next-step signals will appear here in a recruiter-ready format.</p>
+      </div>
+
+      <div class="analysis-grid hidden" id="analysis-grid">
+        <section class="panel snapshot-panel">
+          <div class="panel-kicker">Candidate Snapshot</div>
+          <ul class="list" id="snapshot-list"></ul>
+        </section>
+
+        <section class="questions-panel" id="questions-panel">
+          <div class="panel-kicker">Follow-up Questions</div>
+          <div class="analysis-toolbar">
+            <button class="ghost-button" id="copy-all" type="button">Copy Questions</button>
+          </div>
+          <div class="questions-list" id="questions-list"></div>
+        </section>
+
+        <section class="panel signals-panel">
+          <div class="panel-kicker">Signals To Explore</div>
+          <ul class="list" id="signals-list"></ul>
+        </section>
+
+        <details class="details-panel">
+          <summary>Session details</summary>
+          <pre id="result-meta"></pre>
+        </details>
+
+        <details class="debug-panel">
+          <summary>Live debug</summary>
+          <pre id="debug-output"></pre>
+        </details>
+      </div>
+    </section>
   </div>
-  <div class="status" id="status">Recorder is idle.</div>
-  <div class="response" id="response"></div>
+
   <script src="popup.js"></script>
 </body>
 </html>

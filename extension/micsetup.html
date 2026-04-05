@@ -5,30 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Enable Microphone</title>
   <style>
+    :root {
+      --acid: #d3ff12;
+      --paper: #f7f4eb;
+      --ink: #111111;
+      --muted: #625f58;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      max-width: 480px;
-      margin: 40px auto;
-      padding: 0 16px;
-      color: #202124;
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(211, 255, 18, 0.72), rgba(211, 255, 18, 0.22) 32%, var(--paper) 32%),
+        var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
+    }
+
+    .shell {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 34px 24px 48px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 2px;
+      margin-bottom: 28px;
+    }
+
+    .brand-mark {
+      font-size: 34px;
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+    }
+
+    .brand-meta {
+      font-size: 11px;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(17, 17, 17, 0.72);
+    }
+
+    .panel {
+      border: 1.5px solid var(--ink);
+      border-radius: 30px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 18px 36px rgba(17, 17, 17, 0.08);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(17, 17, 17, 0.68);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 56px;
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      font-weight: 800;
+    }
+
+    p {
+      margin: 0;
+      max-width: 520px;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .rule {
+      height: 1px;
+      margin: 18px 0 22px;
+      background: var(--ink);
     }
 
     button {
-      padding: 10px 14px;
-      font-size: 14px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      padding: 15px 18px;
+      background: var(--ink);
+      color: var(--paper);
+      font: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      cursor: pointer;
     }
 
     #status {
-      margin-top: 16px;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 22px;
+      border: 1.5px solid rgba(17, 17, 17, 0.14);
+      background: linear-gradient(135deg, rgba(211, 255, 18, 0.52), rgba(255, 255, 255, 0.72));
       white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
     }
   </style>
 </head>
 <body>
-  <h2>Enable Microphone</h2>
-  <p>Grant microphone permission once so your voice can be mixed into Meet recordings.</p>
-  <button id="enable">Enable</button>
-  <div id="status">Waiting for microphone permission.</div>
+  <div class="shell">
+    <div class="brand">
+      <div class="brand-mark">inVision U</div>
+      <div class="brand-meta">interview lens powered by inDrive</div>
+    </div>
+
+    <section class="panel">
+      <p class="eyebrow">Permission setup</p>
+      <h1>Enable your mic.</h1>
+      <p>Grant microphone access once so interviewer voice and candidate responses can be mixed into the recruiter brief. After approval, you can close this tab and return to Google Meet.</p>
+      <div class="rule"></div>
+      <button id="enable">Enable Microphone</button>
+      <div id="status">Waiting for microphone permission.</div>
+    </section>
+  </div>
+
   <script src="micsetup.js"></script>
 </body>
 </html>
