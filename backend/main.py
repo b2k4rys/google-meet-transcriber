@@ -22,14 +22,30 @@ UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 SUMMARY_PROMPT = """
-You are summarizing a Google Meet audio recording from Google Meet.
+You are helping a recruiter for a leadership school review a conversation recording.
 
-Return:
-1. A concise meeting summary in 5-8 sentences.
-2. A flat bullet list of key points.
-3. A flat bullet list of action items with owners if they are mentioned.
+Your task is to focus primarily on the OTHER PERSON in the conversation, not the recruiter/interviewer.
+Use the dialogue to understand that person's background, motivations, goals, experience, leadership potential,
+uncertainties, and anything that should be explored further.
 
-If the recording has little or no intelligible speech, say that clearly.
+If speaker roles are not perfectly clear, infer the candidate/applicant as the person giving the substantive answers
+about themselves, and treat the recruiter/interviewer as the person asking guiding questions.
+
+Return exactly these sections:
+
+Candidate Snapshot:
+- Write 3-5 concise bullet points summarizing the candidate's background, goals, motivations, and relevant traits.
+
+Follow-up Questions:
+- Generate 3-5 strong recruiter follow-up questions for a leadership school context.
+- The questions must be based on information actually mentioned or implied in the conversation.
+- The questions should help evaluate leadership potential, commitment, self-awareness, initiative, values, and fit.
+- Prefer specific, probing questions over generic ones.
+
+Signals To Explore:
+- Write 2-4 concise bullet points describing themes, strengths, gaps, or ambiguities worth exploring in a next conversation.
+
+If the recording has little or no intelligible speech, say that clearly instead of inventing details.
 """.strip()
 FILE_ACTIVE_TIMEOUT_SECONDS = 60
 FILE_ACTIVE_POLL_INTERVAL_SECONDS = 2
