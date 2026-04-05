@@ -2,7 +2,6 @@ const micButton = document.getElementById("enable-mic");
 const startButton = document.getElementById("start-rec");
 const stopButton = document.getElementById("stop-rec");
 const copyAllButton = document.getElementById("copy-all");
-const openSidebarButton = document.getElementById("open-sidebar");
 const statusText = document.getElementById("status");
 const statusDot = document.querySelector(".status-dot");
 const emptyState = document.getElementById("empty-state");
@@ -510,29 +509,6 @@ stopButton.addEventListener("click", async () => {
   } catch (error) {
     setUi(false);
     setStatus(`Ошибка остановки: ${error instanceof Error ? error.message : String(error)}`, "error");
-  }
-});
-
-openSidebarButton.addEventListener("click", async () => {
-  try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab?.id) {
-      throw new Error("Нет активной вкладки");
-    }
-
-    if (!tab.url.includes("meet.google.com")) {
-      await chrome.tabs.create({ url: "https://meet.google.com/" });
-      setStatus("Открыт Google Meet. Панель появится когда войдёте в звонок.", "warning");
-    } else {
-      try {
-        await chrome.tabs.sendMessage(tab.id, { type: "open-sidebar" });
-        setStatus("Боковая панель открыта!", "success");
-      } catch (e) {
-        setStatus("Откройте Google Meet для панели", "warning");
-      }
-    }
-  } catch (error) {
-    setStatus(`Ошибка панели: ${error instanceof Error ? error.message : String(error)}`, "error");
   }
 });
 
