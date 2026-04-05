@@ -50,17 +50,17 @@ chrome.runtime.onMessage.addListener(message => {
   if (message?.type === "RECORDING_STATE") {
     setUi(!!message.recording);
     if (message.recording) {
-      setStatus("Recording current Google Meet tab...");
+      setStatus("Recording current Google Meet audio...");
     }
     return;
   }
 
   if (message?.type === "RECORDING_RESULT") {
     if (message.status === "uploaded") {
-      setStatus("Recording uploaded successfully.");
+      setStatus("Audio recording uploaded successfully.");
       responseText.textContent = JSON.stringify(message.result, null, 2);
     } else if (message.status === "stopping") {
-      setStatus("Stopping recording and uploading...");
+      setStatus("Stopping audio recording and uploading...");
     } else if (message.status === "failed") {
       setStatus(`Recording failed: ${message.error || "unknown error"}`);
     }
@@ -107,7 +107,7 @@ micButton.addEventListener("click", async () => {
 
 startButton.addEventListener("click", async () => {
   responseText.textContent = "";
-  setStatus("Starting recording...");
+  setStatus("Starting audio recording...");
 
   try {
     if ("permissions" in navigator) {
@@ -119,7 +119,7 @@ startButton.addEventListener("click", async () => {
             stream.getTracks().forEach(track => track.stop());
             await refreshMicButton();
           } catch {
-            setStatus("Microphone not enabled, continuing with tab audio only.");
+            setStatus("Microphone not enabled, continuing with Meet tab audio only.");
           }
         }
       } catch {}
@@ -136,7 +136,7 @@ startButton.addEventListener("click", async () => {
     }
 
     setUi(true);
-    setStatus("Recording current Google Meet tab...");
+    setStatus("Recording current Google Meet audio...");
   } catch (error) {
     setUi(false);
     setStatus(`Failed to start recording: ${error instanceof Error ? error.message : String(error)}`);
@@ -144,7 +144,7 @@ startButton.addEventListener("click", async () => {
 });
 
 stopButton.addEventListener("click", async () => {
-  setStatus("Stopping recording...");
+  setStatus("Stopping audio recording...");
 
   try {
     const response = await chrome.runtime.sendMessage({ type: "STOP_RECORDING" });
@@ -160,6 +160,6 @@ stopButton.addEventListener("click", async () => {
 void (async () => {
   const status = await chrome.runtime.sendMessage({ type: "GET_RECORDING_STATUS" }).catch(() => null);
   setUi(!!status?.recording);
-  setStatus(status?.recording ? "Recording current Google Meet tab..." : "Recorder is idle.");
+  setStatus(status?.recording ? "Recording current Google Meet audio..." : "Recorder is idle.");
   await refreshMicButton();
 })();
