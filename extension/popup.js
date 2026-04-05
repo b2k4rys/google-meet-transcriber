@@ -48,6 +48,21 @@ function normalizeWhitespace(text) {
   return text.replace(/\s+/g, " ").trim();
 }
 
+function stripMarkdown(text) {
+  if (!text) return "";
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/__(.+?)__/g, "$1")
+    .replace(/_(.+?)_/g, "$1")
+    .replace(/`(.+?)`/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/^#+\s*/gm, "")
+    .replace(/^[-*]\s+/gm, "")
+    .replace(/^\d+\.\s+/gm, "")
+    .trim();
+}
+
 function stripListMarker(line) {
   return normalizeWhitespace(line.replace(/^[-*•]\s+/, "").replace(/^\d+\.\s+/, ""));
 }
@@ -165,7 +180,7 @@ function renderList(node, items) {
 
   for (const item of items) {
     const listItem = document.createElement("li");
-    listItem.textContent = item;
+    listItem.textContent = stripMarkdown(item);
     node.appendChild(listItem);
   }
 }
@@ -174,12 +189,12 @@ async function copyText(text, button) {
   try {
     await navigator.clipboard.writeText(text);
     const original = button.textContent;
-    button.textContent = "Copied";
+    button.textContent = "Скопировано";
     setTimeout(() => {
       button.textContent = original;
     }, 1200);
   } catch {
-    setStatus("Copy failed. Clipboard access is unavailable.", "warning");
+    setStatus("Не удалось скопировать", "warning");
   }
 }
 
@@ -197,7 +212,7 @@ function createQuestionCard(question, index) {
   const copyButton = document.createElement("button");
   copyButton.type = "button";
   copyButton.className = "question-copy";
-  copyButton.textContent = "Copy";
+  copyButton.textContent = "Копировать";
   copyButton.addEventListener("click", () => {
     void copyText(question.text, copyButton);
   });
@@ -207,7 +222,7 @@ function createQuestionCard(question, index) {
 
   const questionText = document.createElement("p");
   questionText.className = "question-text";
-  questionText.textContent = question.text;
+  questionText.textContent = stripMarkdown(question.text);
 
   card.appendChild(head);
   card.appendChild(questionText);
@@ -222,11 +237,11 @@ function createQuestionCard(question, index) {
 
       const whyLabel = document.createElement("div");
       whyLabel.className = "meta-label";
-      whyLabel.textContent = "Why ask";
+      whyLabel.textContent = "Зачем";
 
       const whyValue = document.createElement("p");
       whyValue.className = "meta-value";
-      whyValue.textContent = question.whyAsk;
+      whyValue.textContent = stripMarkdown(question.whyAsk);
 
       whyRow.appendChild(whyLabel);
       whyRow.appendChild(whyValue);
@@ -239,11 +254,11 @@ function createQuestionCard(question, index) {
 
       const listenLabel = document.createElement("div");
       listenLabel.className = "meta-label";
-      listenLabel.textContent = "Listen for";
+      listenLabel.textContent = "Слушать";
 
       const listenValue = document.createElement("p");
       listenValue.className = "meta-value";
-      listenValue.textContent = question.listenFor;
+      listenValue.textContent = stripMarkdown(question.listenFor);
 
       listenRow.appendChild(listenLabel);
       listenRow.appendChild(listenValue);
@@ -270,7 +285,7 @@ function renderFallbackQuestion(summary) {
   renderQuestions([
     {
       text: summary,
-      whyAsk: "Gemini did not return the expected recruiter structure, so the raw analysis is shown here.",
+      whyAsk: "ИИ не вернул ожидаемую структуру, показан сырой анализ.",
       listenFor: ""
     }
   ]);
@@ -292,25 +307,25 @@ function renderResult(result) {
 
   if (result.summary_status !== "completed" || !result.summary) {
     renderList(snapshotList, [
-      "The recording was uploaded and saved successfully.",
-      "Gemini could not generate a recruiter brief for this session."
+      "Запись сохранена",
+      "ИИ не смог создать отчёт для этой сессии"
     ]);
     renderQuestions([
       {
-        text: result.summary_error || "Summary generation failed.",
-        whyAsk: "Check the backend status or try another upload after verifying the audio format and Gemini response.",
+        text: result.summary_error || "Не удалось создать отчёт",
+        whyAsk: "Проверьте статус backend или попробуйте другую загрузку",
         listenFor: ""
       }
     ]);
     renderList(signalsList, [
-      "Retry after restarting the backend if the failure looks transient.",
-      "Inspect the session details panel for the exact Gemini error."
+      "Перезапустите backend и попробуйте снова",
+      "Проверьте детали в панели «Детали сессии»"
     ]);
     return;
   }
 
   const parsed = parseSummary(result.summary);
-  renderList(snapshotList, parsed.snapshot.length ? parsed.snapshot : ["Gemini returned a summary, but the candidate snapshot section was empty."]);
+  renderList(snapshotList, parsed.snapshot.length ? parsed.snapshot : ["ИИ вернул отчёт, но профиль кандидата пуст"]);
 
   if (parsed.questions.length) {
     renderQuestions(parsed.questions);
@@ -318,7 +333,7 @@ function renderResult(result) {
     renderFallbackQuestion(result.summary);
   }
 
-  renderList(signalsList, parsed.signals.length ? parsed.signals : ["No explicit next-step signals were extracted from the conversation."]);
+  renderList(signalsList, parsed.signals.length ? parsed.signals : ["Нет явных следующих шагов из разговора"]);
 }
 
 function pushDebugLine(line) {
@@ -336,21 +351,21 @@ async function refreshMicButton() {
     const permission = await navigator.permissions.query({ name: "microphone" });
     const update = () => {
       if (permission.state === "granted") {
-        micButton.querySelector(".control-label").textContent = "Microphone Enabled";
-        micButton.querySelector(".control-note").textContent = "Your voice can be mixed into recruiter review recordings.";
+        micButton.querySelector(".control-label").textContent = "Микрофон включён";
+        micButton.querySelector(".control-note").textContent = "Запись звука активна";
         micButton.disabled = true;
         return;
       }
 
       if (permission.state === "denied") {
-        micButton.querySelector(".control-label").textContent = "Microphone Blocked";
-        micButton.querySelector(".control-note").textContent = "Open the permission page and allow microphone access for the extension.";
+        micButton.querySelector(".control-label").textContent = "Микрофон заблокирован";
+        micButton.querySelector(".control-note").textContent = "Разрешите доступ в настройках браузера";
         micButton.disabled = false;
         return;
       }
 
-      micButton.querySelector(".control-label").textContent = "Enable Microphone";
-      micButton.querySelector(".control-note").textContent = "Prime mic access once so both voices are captured clearly.";
+      micButton.querySelector(".control-label").textContent = "Включить микрофон";
+      micButton.querySelector(".control-note").textContent = "Разрешите доступ к микрофону для записи";
       micButton.disabled = false;
     };
 
@@ -376,9 +391,9 @@ chrome.runtime.onMessage.addListener(message => {
   if (message?.type === "RECORDING_STATE") {
     setUi(!!message.recording);
     if (message.recording) {
-      setStatus("Recording current Google Meet audio...", "active");
+      setStatus("Запись Google Meet...", "active");
     } else if (!uiState.awaitingFinalResult && !uiState.hasRenderedResult) {
-      setStatus("Recorder is idle.", "idle");
+      setStatus("Запись не активна", "idle");
     }
     return;
   }
@@ -387,15 +402,15 @@ chrome.runtime.onMessage.addListener(message => {
     if (message.status === "uploaded") {
       uiState.awaitingFinalResult = false;
       uiState.hasRenderedResult = true;
-      setStatus("Recruiter brief generated from the interview.", "success");
+      setStatus("Отчёт готов!", "success");
       renderResult(message.result);
     } else if (message.status === "stopping") {
       uiState.awaitingFinalResult = true;
-      setStatus("Stopping audio capture and generating the recruiter brief...", "warning");
+      setStatus("Обработка аудио и создание отчёта...", "warning");
     } else if (message.status === "failed") {
       uiState.awaitingFinalResult = false;
       uiState.hasRenderedResult = true;
-      setStatus(`Recording failed: ${message.error || "unknown error"}`, "error");
+      setStatus(`Ошибка: ${message.error || "неизвестная"}`, "error");
     }
 
     if (message.status !== "stopping") {
@@ -448,7 +463,7 @@ startButton.addEventListener("click", async () => {
   uiState.hasRenderedResult = false;
   uiState.awaitingFinalResult = false;
   copyAllButton.disabled = true;
-  setStatus("Starting audio recording...", "warning");
+  setStatus("Начало записи...", "warning");
 
   try {
     if ("permissions" in navigator) {
@@ -477,15 +492,15 @@ startButton.addEventListener("click", async () => {
     }
 
     setUi(true);
-    setStatus("Recording current Google Meet audio...", "active");
+    setStatus("Запись Google Meet...", "active");
   } catch (error) {
     setUi(false);
-    setStatus(`Failed to start recording: ${error instanceof Error ? error.message : String(error)}`, "error");
+    setStatus(`Ошибка записи: ${error instanceof Error ? error.message : String(error)}`, "error");
   }
 });
 
 stopButton.addEventListener("click", async () => {
-  setStatus("Stopping audio recording...", "warning");
+  setStatus("Остановка записи...", "warning");
 
   try {
     const response = await chrome.runtime.sendMessage({ type: "STOP_RECORDING" });
@@ -494,7 +509,7 @@ stopButton.addEventListener("click", async () => {
     }
   } catch (error) {
     setUi(false);
-    setStatus(`Failed to stop recording: ${error instanceof Error ? error.message : String(error)}`, "error");
+    setStatus(`Ошибка остановки: ${error instanceof Error ? error.message : String(error)}`, "error");
   }
 });
 
@@ -502,29 +517,29 @@ openSidebarButton.addEventListener("click", async () => {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab?.id) {
-      throw new Error("No active tab.");
+      throw new Error("Нет активной вкладки");
     }
 
     if (!tab.url.includes("meet.google.com")) {
       await chrome.tabs.create({ url: "https://meet.google.com/" });
-      setStatus("Opened Google Meet. The sidebar will appear when you join a meeting.", "warning");
+      setStatus("Открыт Google Meet. Панель появится когда войдёте в звонок.", "warning");
     } else {
       try {
         await chrome.tabs.sendMessage(tab.id, { type: "open-sidebar" });
-        setStatus("Sidebar opened in Google Meet!", "success");
+        setStatus("Боковая панель открыта!", "success");
       } catch (e) {
-        setStatus("Open Google Meet to use the sidebar feature.", "warning");
+        setStatus("Откройте Google Meet для панели", "warning");
       }
     }
   } catch (error) {
-    setStatus(`Failed to open sidebar: ${error instanceof Error ? error.message : String(error)}`, "error");
+    setStatus(`Ошибка панели: ${error instanceof Error ? error.message : String(error)}`, "error");
   }
 });
 
 void (async () => {
   const status = await chrome.runtime.sendMessage({ type: "GET_RECORDING_STATUS" }).catch(() => null);
   setUi(!!status?.recording);
-  setStatus(status?.recording ? "Recording current Google Meet audio..." : "Recorder is idle.", status?.recording ? "active" : "idle");
+  setStatus(status?.recording ? "Запись Google Meet..." : "Запись не активна", status?.recording ? "active" : "idle");
   copyAllButton.disabled = true;
   await refreshMicButton();
 })();

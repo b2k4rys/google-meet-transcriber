@@ -22,34 +22,29 @@ UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 SUMMARY_PROMPT = """
-You are helping a recruiter for a leadership school review a conversation recording.
+Ты помогаешь рекрутеру школы лидерства анализировать запись разговора.
 
-Your task is to focus primarily on the OTHER PERSON in the conversation, not the recruiter/interviewer.
-Use the dialogue to understand that person's background, motivations, goals, experience, leadership potential,
-uncertainties, and anything that should be explored further.
+Твоя задача — сфокусироваться на КАНДИДАТЕ (человеке, который отвечает на вопросы), а не на рекрутере.
+Используй диалог, чтобы понять мотивацию кандидата, опыт, цели, лидерский потенциал и зоны роста.
 
-If speaker roles are not perfectly clear, infer the candidate/applicant as the person giving the substantive answers
-about themselves, and treat the recruiter/interviewer as the person asking guiding questions.
+ОТВЕЧАЙ СТРОГО НА РУССКОМ ЯЗЫКЕ.
 
-Return exactly these sections:
+Верни ответ СТРОГО в этом формате (без лишнего текста):
 
 Candidate Snapshot:
-- Write 3-5 concise bullet points summarizing the candidate's background, goals, motivations, and relevant traits.
+- Краткое описание кандидата (3-5 пунктов: опыт, цели, мотивация, сильные стороны)
 
 Follow-up Questions:
-- Generate 3-5 strong recruiter follow-up questions for a leadership school context.
-- The questions must be based on information actually mentioned or implied in the conversation.
-- The questions should help evaluate leadership potential, commitment, self-awareness, initiative, values, and fit.
-- Prefer specific, probing questions over generic ones.
-- Format each item exactly like this:
-  1. Question: ...
-     Why ask: ...
-     Listen for: ...
+- Сгенерируй 3-5 сильных вопросов для кандидата
+- Каждый вопрос СТРОГО в таком формате:
+1. Question: текст вопроса
+Why ask: почему это важно спросить
+Listen for: что ожидать в ответе
 
 Signals To Explore:
-- Write 2-4 concise bullet points describing themes, strengths, gaps, or ambiguities worth exploring in a next conversation.
+- 2-4 темы/темы для следующих встреч (сильные стороны, пробелы, амбиции)
 
-If the recording has little or no intelligible speech, say that clearly instead of inventing details.
+Если в записи мало речи — скажи об этом, не выдумывай детали.
 """.strip()
 FILE_ACTIVE_TIMEOUT_SECONDS = 60
 FILE_ACTIVE_POLL_INTERVAL_SECONDS = 2

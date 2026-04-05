@@ -50,7 +50,17 @@ function pushRecordingState(recording, extra = {}) {
 }
 
 function pushRecordingResult(result) {
-  getPort().postMessage({ type: "RECORDING_RESULT", tabId: currentTabId, ...result });
+  log("=== pushRecordingResult called ===");
+  log("Result:", JSON.stringify(result).substring(0, 300));
+  
+  const port = getPort();
+  if (!port) {
+    log("ERROR: No port to send result!");
+    return;
+  }
+  
+  port.postMessage({ type: "RECORDING_RESULT", tabId: currentTabId, ...result });
+  log("Sent RECORDING_RESULT to port");
 }
 
 function pushDebug(text) {
@@ -308,15 +318,23 @@ function encodeWavFromChunks(chunks, sampleRate) {
 }
 
 async function uploadRecording(blob, tabUrl) {
+  log("Starting upload to backend...");
+  log("Blob size:", blob.size, "bytes");
+  log("Upload URL:", uploadUrl);
+  
   const formData = new FormData();
   formData.append("file", blob, `google-meet-recording-${inferMeetingSuffix(tabUrl)}-${Date.now()}.wav`);
 
+  log("Sending POST to backend...");
   const response = await fetch(uploadUrl, {
     method: "POST",
     body: formData
   });
 
+  log("Backend response status:", response.status);
   const result = await response.json();
+  log("Backend response:", JSON.stringify(result).substring(0, 200));
+  
   if (!response.ok) {
     throw new Error(result.detail || "Upload failed.");
   }
@@ -326,34 +344,55 @@ async function uploadRecording(blob, tabUrl) {
 
 async function finalizeRecording() {
   if (finalizing) {
+    log("Already finalizing, skipping");
     return;
   }
 
+  log("=== FINALIZING RECORDING ===");
+  log("pcmChunks count:", pcmChunks.length);
+  log("currentTabId:", currentTabId);
+  
   finalizing = true;
   capturing = false;
-  cleanupRecorderNodes();
-
+  
   try {
+    log("Encoding WAV...");
     const wavBlob = encodeWavFromChunks(pcmChunks, pcmSampleRate);
+    log("WAV blob size:", wavBlob.size, "bytes");
     pushDebug(`Final WAV size=${wavBlob.size}`);
+    
     if (!wavBlob.size) {
       throw new Error("Recording is empty.");
     }
 
+    log("Uploading to backend...");
+    log("Upload URL:", uploadUrl);
+    
     const result = await uploadRecording(wavBlob, currentTabUrl);
+    log("Upload successful!");
+    log("Result summary:", result.summary ? result.summary.substring(0, 100) : "no summary");
+    
+    log("Sending RECORDING_RESULT with status=uploaded");
     pushRecordingResult({ status: "uploaded", result });
+    log("RECORDING_RESULT sent");
   } catch (error) {
+    log("=== UPLOAD FAILED ===");
+    log("Error:", error);
+    log("Error stack:", error.stack);
+    
     pushRecordingResult({
       status: "failed",
       error: error instanceof Error ? error.message : String(error)
     });
   } finally {
+    log("Cleaning up...");
     pushRecordingState(false);
     pcmChunks = [];
     cleanupMediaGraph();
     currentTabId = null;
     currentTabUrl = null;
     finalizing = false;
+    log("=== CLEANUP COMPLETE ===");
   }
 }
 

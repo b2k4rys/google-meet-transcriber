@@ -130,7 +130,7 @@ function getStreamIdForTab(tabId) {
 }
 
 function isMeetTab(tab) {
-  return !!tab?.url && tab.url.startsWith("https://meet.google.com/");
+  return !!tab?.url && tab.url.startsWith("https://meet.google.com/") && /[a-z]+-[a-z]+-[a-z]+/i.test(tab.url);
 }
 
 chrome.runtime.onConnect.addListener(port => {
@@ -156,6 +156,10 @@ chrome.runtime.onConnect.addListener(port => {
     }
 
     if (message?.type === "RECORDING_RESULT") {
+      bglog("=== RECORDING_RESULT received from offscreen ===");
+      bglog("Status:", message.status);
+      bglog("Has result:", !!message.result);
+      
       if (message.status === "stopping") {
         chrome.action.setBadgeText({ text: "...", tabId: message.tabId });
         chrome.action.setBadgeBackgroundColor({ color: "#f9ab00", tabId: message.tabId });
@@ -170,7 +174,20 @@ chrome.runtime.onConnect.addListener(port => {
       } else {
         setBadge(false, message.tabId);
       }
-      chrome.runtime.sendMessage(message).catch(() => {});
+      
+      bglog("Forwarding RECORDING_RESULT to sidebar/popup");
+      bglog("Message object keys:", Object.keys(message));
+      bglog("Message result.summary length:", message.result?.summary?.length || 0);
+      
+      // Send to all contexts (sidebar, popup, etc.)
+      chrome.runtime.sendMessage(message, (response) => {
+        if (chrome.runtime.lastError) {
+          bglog("❌ Failed to forward:", chrome.runtime.lastError.message);
+        } else {
+          bglog("✅ Successfully forwarded RECORDING_RESULT");
+          bglog("Response from sidebar:", response);
+        }
+      });
       return;
     }
 
@@ -189,6 +206,13 @@ chrome.runtime.onConnect.addListener(port => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // Handle test message
+  if (message?.type === "TEST_SIDEBAR") {
+    bglog("TEST_SIDEBAR from:", sender.tab?.id || "unknown");
+    sendResponse({ ok: true, timestamp: Date.now() });
+    return true;
+  }
+
   (async () => {
     if (message?.type === "GET_RECORDING_STATUS") {
       try {
@@ -206,18 +230,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     if (message?.type === "START_RECORDING") {
-      const tabId = message.tabId;
+      // Get tabId from message or from sender (for content scripts)
+      let tabId = message.tabId;
+      
+      // If no tabId provided, try to get it from sender (content script)
+      if (typeof tabId !== "number" && sender?.tab?.id) {
+        tabId = sender.tab.id;
+        bglog("Using sender tab ID:", tabId, "from URL:", sender.tab.url);
+      }
+      
       if (typeof tabId !== "number") {
-        sendResponse({ ok: false, error: "Missing tab ID." });
+        sendResponse({ ok: false, error: "Missing tab ID. Please make sure you're on Google Meet." });
         return;
       }
 
       const tab = await chrome.tabs.get(tabId).catch(() => null);
+      bglog("Got tab:", tab?.url);
+      
       if (!isMeetTab(tab)) {
-        sendResponse({ ok: false, error: "Open an active Google Meet tab before starting." });
+        sendResponse({ ok: false, error: "Please open Google Meet first. The active tab is: " + (tab?.url || "unknown") });
         return;
       }
 
+      bglog("Starting recording on tab:", tabId);
       await ensureOffscreen();
       const streamId = await getStreamIdForTab(tabId);
       const result = await postToOffscreen({
@@ -237,14 +272,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     if (message?.type === "STOP_RECORDING") {
-      await ensureOffscreen();
-      const result = await postToOffscreen({ type: "OFFSCREEN_STOP" });
-      if (!result?.ok) {
-        sendResponse({ ok: false, error: result?.error || "Failed to stop recording." });
-        return;
-      }
+      bglog("=== STOP_RECORDING received ===");
+      bglog("Sender:", sender?.tab?.id, sender?.tab?.url);
+      
+      try {
+        bglog("Calling ensureOffscreen...");
+        await ensureOffscreen();
+        bglog("Offscreen ready, posting OFFSCREEN_STOP...");
+        
+        const result = await postToOffscreen({ type: "OFFSCREEN_STOP" });
+        bglog("Offscreen STOP result:", result);
+        
+        if (!result?.ok) {
+          bglog("STOP failed:", result?.error);
+          sendResponse({ ok: false, error: result?.error || "Failed to stop recording." });
+          return;
+        }
 
-      sendResponse({ ok: true });
+        bglog("STOP successful, waiting for RECORDING_RESULT...");
+        sendResponse({ ok: true });
+      } catch (error) {
+        bglog("STOP_RECORDING error:", error);
+        sendResponse({ ok: false, error: error.message });
+      }
       return;
     }
 

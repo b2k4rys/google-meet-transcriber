@@ -531,15 +531,15 @@
     <header class="brand-bar">
       <div class="brand-lockup">
         <div class="brand-mark">inVision U</div>
-        <div class="brand-meta">interview lens powered by inDrive</div>
+        <div class="brand-meta">интервью-ассистент</div>
       </div>
-      <div class="brand-pill">Recruiter Tool</div>
+      <div class="brand-pill">Рекрутер</div>
     </header>
 
     <section class="hero">
-      <div class="eyebrow">Leadership school admissions</div>
-      <h1 class="hero-title">Capture the call. Surface the real next questions.</h1>
-      <p class="hero-copy">Review candidate answers through an inVision U styled recruiter brief with sharp follow-up prompts you can ask immediately.</p>
+      <div class="eyebrow">Школа лидерства</div>
+      <h1 class="hero-title">Запишите звонок. Получите вопросы.</h1>
+      <p class="hero-copy">Анализируйте ответы кандидата через отчёт рекрутера с готовыми follow-up вопросами для интервью.</p>
     </section>
 
     <div class="rule"></div>
@@ -548,25 +548,25 @@
       <div class="section-head">
         <div class="section-title-wrap">
           <span class="section-index">01</span>
-          <h2 class="section-title">Capture</h2>
+          <h2 class="section-title">Запись</h2>
         </div>
       </div>
       <div class="controls-grid">
         <button class="control-button mic" id="enable-mic">
-          <span class="control-label">Enable Microphone</span>
-          <span class="control-note">Prime mic access once so both voices are captured clearly.</span>
+          <span class="control-label">Включить микрофон</span>
+          <span class="control-note">Разрешите доступ к микрофону для записи</span>
         </button>
         <button class="control-button start" id="start-rec">
-          <span class="control-label">Start Audio Recording</span>
-          <span class="control-note">Begin listening to the active Google Meet conversation.</span>
+          <span class="control-label">Начать запись</span>
+          <span class="control-note">Записать аудио из Google Meet</span>
         </button>
         <button class="control-button stop" id="stop-rec" disabled>
-          <span class="control-label">Stop and Generate Brief</span>
-          <span class="control-note">Upload the call and receive recruiter prompts.</span>
+          <span class="control-label">Остановить и создать отчёт</span>
+          <span class="control-note">Загрузить запись и получить вопросы</span>
         </button>
         <button class="control-button sidebar-toggle" id="open-sidebar">
-          <span class="control-label">Open in Meet Sidebar →</span>
-          <span class="control-note">Use the sidebar panel during your Google Meet call.</span>
+          <span class="control-label">Открыть боковую панель →</span>
+          <span class="control-note">Использовать панель прямо в Google Meet</span>
         </button>
       </div>
     </section>
@@ -574,50 +574,50 @@
     <section class="panel status-panel">
       <div class="status-chip">
         <span class="status-dot"></span>
-        <span>Live status</span>
+        <span>Статус</span>
       </div>
-      <p class="status-text" id="status">Recorder is idle.</p>
+      <p class="status-text" id="status">Запись не активна</p>
     </section>
 
     <section class="analysis-panel">
       <div class="section-head">
         <div class="section-title-wrap">
           <span class="section-index">02</span>
-          <h2 class="section-title">Recruiter Brief</h2>
+          <h2 class="section-title">Отчёт рекрутера</h2>
         </div>
       </div>
 
       <div class="empty-state" id="empty-state">
-        <p class="empty-title">No interview brief yet.</p>
-        <p class="empty-copy">After a recording finishes, candidate takeaways, follow-up questions, and next-step signals will appear here in a recruiter-ready format.</p>
+        <p class="empty-title">Отчёта пока нет</p>
+        <p class="empty-copy">После записи встречи здесь появятся выводы, вопросы и следующие шаги.</p>
       </div>
 
       <div class="analysis-grid hidden" id="analysis-grid">
         <section class="panel snapshot-panel">
-          <div class="panel-kicker">Candidate Snapshot</div>
+          <div class="panel-kicker">Профиль кандидата</div>
           <ul class="list" id="snapshot-list"></ul>
         </section>
 
         <section class="questions-panel" id="questions-panel">
-          <div class="panel-kicker">Follow-up Questions</div>
+          <div class="panel-kicker">Вопросы для интервью</div>
           <div class="analysis-toolbar">
-            <button class="ghost-button" id="copy-all" type="button">Copy Questions</button>
+            <button class="ghost-button" id="copy-all" type="button">Копировать</button>
           </div>
           <div class="questions-list" id="questions-list"></div>
         </section>
 
         <section class="panel signals-panel">
-          <div class="panel-kicker">Signals To Explore</div>
+          <div class="panel-kicker">Что уточнить</div>
           <ul class="list" id="signals-list"></ul>
         </section>
 
         <details class="details-panel">
-          <summary>Session details</summary>
+          <summary>Детали сессии</summary>
           <pre id="result-meta"></pre>
         </details>
 
         <details class="debug-panel">
-          <summary>Live debug</summary>
+          <summary>Отладка</summary>
           <pre id="debug-output"></pre>
         </details>
       </div>
