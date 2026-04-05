@@ -349,7 +349,7 @@ async function refreshMicButton() {
       }
 
       micButton.querySelector(".control-label").textContent = "Enable Microphone";
-      micButton.querySelector(".control-note").textContent = "Prime mic access once so the candidate and interviewer are both represented.";
+      micButton.querySelector(".control-note").textContent = "Prime mic access once so both voices are captured clearly.";
       micButton.disabled = false;
     };
 

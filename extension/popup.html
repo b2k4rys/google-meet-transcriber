@@ -14,8 +14,8 @@
       --soft-line: rgba(17, 17, 17, 0.16);
       --card: #ffffff;
       --shadow: 0 18px 40px rgba(17, 17, 17, 0.08);
-      --radius: 26px;
-      --radius-sm: 18px;
+      --radius: 20px;
+      --radius-sm: 14px;
     }
 
     * {
@@ -24,13 +24,15 @@
 
     body {
       margin: 0;
-      min-width: 460px;
-      max-width: 460px;
+      min-width: 480px;
+      max-width: 480px;
       background:
-        linear-gradient(180deg, rgba(211, 255, 18, 0.62) 0, rgba(211, 255, 18, 0.62) 112px, var(--paper) 112px),
+        linear-gradient(180deg, rgba(211, 255, 18, 0.62) 0, rgba(211, 255, 18, 0.62) 96px, var(--paper) 96px),
         var(--paper);
       color: var(--ink);
       font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
     button {
@@ -51,15 +53,15 @@
     }
 
     .shell {
-      padding: 18px 18px 22px;
+      padding: 16px 16px 20px;
     }
 
     .brand-bar {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
     .brand-lockup {
@@ -68,7 +70,7 @@
     }
 
     .brand-mark {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
       line-height: 0.95;
       letter-spacing: -0.05em;
@@ -76,7 +78,7 @@
 
     .brand-meta {
       color: rgba(17, 17, 17, 0.82);
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1.2;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -85,9 +87,9 @@
     .brand-pill {
       border: 1.5px solid var(--line);
       border-radius: 999px;
-      padding: 9px 12px;
+      padding: 8px 11px;
       background: rgba(255, 255, 255, 0.6);
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -96,12 +98,12 @@
 
     .hero {
       display: grid;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 6px;
+      margin-bottom: 16px;
     }
 
     .eyebrow {
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.16em;
@@ -111,24 +113,24 @@
     .hero-title {
       margin: 0;
       max-width: 380px;
-      font-size: 44px;
-      line-height: 0.94;
-      letter-spacing: -0.07em;
+      font-size: 32px;
+      line-height: 0.98;
+      letter-spacing: -0.06em;
       font-weight: 800;
     }
 
     .hero-copy {
       margin: 0;
       max-width: 360px;
-      font-size: 14px;
-      line-height: 1.45;
+      font-size: 12px;
+      line-height: 1.5;
       color: var(--muted);
     }
 
     .rule {
       height: 1px;
       background: var(--line);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .panel {
@@ -144,27 +146,27 @@
     .panel + .analysis-grid,
     .analysis-grid + .panel,
     .status-panel + .analysis-grid {
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
     .section-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     .section-title-wrap {
       display: flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 8px;
       min-width: 0;
     }
 
     .section-index {
       flex: none;
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.16em;
@@ -173,7 +175,7 @@
 
     .section-title {
       margin: 0;
-      font-size: 28px;
+      font-size: 22px;
       line-height: 0.98;
       letter-spacing: -0.05em;
       font-weight: 800;
@@ -186,7 +188,7 @@
     .signals-panel,
     .debug-panel,
     .details-panel {
-      padding: 16px;
+      padding: 14px;
     }
 
     .controls-panel::before,
@@ -198,21 +200,21 @@
       left: 0;
       top: 0;
       width: 100%;
-      height: 12px;
+      height: 10px;
       background: var(--acid);
     }
 
     .controls-grid {
       display: grid;
-      gap: 10px;
+      gap: 9px;
       margin-top: 4px;
     }
 
     .control-button {
       width: 100%;
-      min-height: 52px;
+      min-height: 48px;
       border-radius: 999px;
-      padding: 12px 16px;
+      padding: 11px 15px;
       text-align: left;
     }
 
@@ -221,15 +223,15 @@
     }
 
     .control-label {
-      font-size: 16px;
+      font-size: 14px;
       line-height: 1.1;
       font-weight: 700;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
     }
 
     .control-note {
-      margin-top: 5px;
-      font-size: 11px;
+      margin-top: 3px;
+      font-size: 10px;
       line-height: 1.35;
       color: rgba(17, 17, 17, 0.66);
     }
@@ -258,36 +260,36 @@
     .status-chip {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       border: 1.5px solid var(--line);
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 7px 11px;
       background: rgba(255, 255, 255, 0.78);
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.14em;
     }
 
     .status-dot {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
       background: var(--ink);
     }
 
     .status-text {
-      margin: 12px 0 0;
+      margin: 8px 0 0;
       max-width: 340px;
-      font-size: 20px;
-      line-height: 1.05;
-      letter-spacing: -0.04em;
+      font-size: 16px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
       font-weight: 700;
     }
 
     .analysis-grid {
       display: grid;
-      gap: 16px;
+      gap: 14px;
     }
 
     .analysis-panel {
@@ -299,8 +301,8 @@
 
     .empty-state {
       display: grid;
-      gap: 10px;
-      padding: 18px 16px;
+      gap: 6px;
+      padding: 14px 12px;
       border: 1.5px dashed rgba(17, 17, 17, 0.34);
       border-radius: calc(var(--radius) - 2px);
       background: rgba(255, 255, 255, 0.56);
@@ -308,16 +310,16 @@
 
     .empty-title {
       margin: 0;
-      font-size: 20px;
-      line-height: 1.02;
-      letter-spacing: -0.04em;
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
       font-weight: 700;
     }
 
     .empty-copy {
       margin: 0;
-      font-size: 13px;
-      line-height: 1.48;
+      font-size: 12px;
+      line-height: 1.5;
       color: var(--muted);
     }
 
@@ -327,7 +329,7 @@
 
     .list {
       display: grid;
-      gap: 10px;
+      gap: 8px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -335,9 +337,9 @@
 
     .list li {
       position: relative;
-      padding-left: 18px;
-      font-size: 14px;
-      line-height: 1.5;
+      padding-left: 15px;
+      font-size: 12px;
+      line-height: 1.55;
       color: var(--ink);
     }
 
@@ -345,9 +347,9 @@
       content: "";
       position: absolute;
       left: 0;
-      top: 0.6em;
-      width: 8px;
-      height: 8px;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
       border-radius: 999px;
       background: var(--acid);
       box-shadow: 0 0 0 1.5px var(--line);
@@ -355,7 +357,7 @@
 
     .questions-panel {
       position: relative;
-      padding: 16px;
+      padding: 14px;
       border: 1.5px solid var(--line);
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(211, 255, 18, 0.76), rgba(211, 255, 18, 0.26) 48%, #ffffff 48%, #ffffff 100%);
@@ -367,24 +369,24 @@
       align-items: center;
       border: 1.5px solid var(--line);
       border-radius: 999px;
-      padding: 7px 11px;
-      font-size: 11px;
+      padding: 6px 10px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       background: rgba(255, 255, 255, 0.78);
-      margin-bottom: 12px;
+      margin-bottom: 11px;
     }
 
     .questions-list {
       display: grid;
-      gap: 12px;
+      gap: 11px;
     }
 
     .question-card {
       display: grid;
-      gap: 12px;
-      padding: 16px;
+      gap: 0;
+      padding: 12px;
       border: 1.5px solid var(--line);
       border-radius: calc(var(--radius) - 4px);
       background: rgba(255, 255, 255, 0.92);
@@ -394,19 +396,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 6px;
     }
 
     .question-index {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 42px;
-      padding: 8px 11px;
+      min-width: 40px;
+      padding: 7px 10px;
       border-radius: 999px;
       background: var(--ink);
       color: var(--paper);
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.14em;
@@ -414,60 +417,60 @@
 
     .question-copy {
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 7px 11px;
       background: transparent;
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
 
     .question-text {
-      margin: 0;
-      font-size: 24px;
-      line-height: 1.08;
-      letter-spacing: -0.05em;
-      font-weight: 800;
+      margin: 0 0 8px;
+      font-size: 17px;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      font-weight: 700;
     }
 
     .question-meta {
       display: grid;
-      gap: 10px;
-      padding-top: 10px;
+      gap: 8px;
+      padding-top: 8px;
       border-top: 1px solid var(--soft-line);
     }
 
     .meta-row {
       display: grid;
-      gap: 3px;
+      gap: 2px;
     }
 
     .meta-label {
-      font-size: 10px;
+      font-size: 9px;
       line-height: 1;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(17, 17, 17, 0.58);
+      letter-spacing: 0.14em;
+      color: rgba(17, 17, 17, 0.55);
     }
 
     .meta-value {
       margin: 0;
-      font-size: 13px;
-      line-height: 1.48;
+      font-size: 12px;
+      line-height: 1.5;
       color: var(--muted);
     }
 
     .analysis-toolbar {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 12px;
+      margin-bottom: 11px;
     }
 
     .ghost-button {
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 7px 11px;
       background: transparent;
-      font-size: 11px;
+      font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.12em;
@@ -488,8 +491,8 @@
     summary {
       list-style: none;
       cursor: pointer;
-      padding: 14px 16px;
-      font-size: 12px;
+      padding: 12px 14px;
+      font-size: 11px;
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: 0.14em;
@@ -502,11 +505,11 @@
 
     pre {
       margin: 0;
-      padding: 0 16px 16px;
+      padding: 0 14px 14px;
       white-space: pre-wrap;
       word-break: break-word;
       font-family: "SFMono-Regular", "Menlo", monospace;
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.55;
       color: #2f2c28;
     }
@@ -540,7 +543,7 @@
       <div class="controls-grid">
         <button class="control-button mic" id="enable-mic">
           <span class="control-label">Enable Microphone</span>
-          <span class="control-note">Prime mic access once so the candidate and interviewer are both represented.</span>
+          <span class="control-note">Prime mic access once so both voices are captured clearly.</span>
         </button>
         <button class="control-button start" id="start-rec">
           <span class="control-label">Start Audio Recording</span>
@@ -548,7 +551,7 @@
         </button>
         <button class="control-button stop" id="stop-rec" disabled>
           <span class="control-label">Stop and Generate Brief</span>
-          <span class="control-note">Upload the call and receive candidate-focused recruiter prompts.</span>
+          <span class="control-note">Upload the call and receive recruiter prompts.</span>
         </button>
       </div>
     </section>
