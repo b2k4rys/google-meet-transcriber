@@ -17,6 +17,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log("[Meet Connector] connect message received");
     sendMeetStatus();
     sendResponse({ status: "connected" });
+    return;
+  }
+
+  if (message.type === "capture-log") {
+    console.log("[Meet Connector] capture status:", message.text);
+    return;
   }
 });
 
